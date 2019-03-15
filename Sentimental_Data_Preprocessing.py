@@ -9,7 +9,8 @@ def import_tweets(filename, header = None):
 
     # for i in ['Flag','Id','User','Date']:
     #     del train_dataset[i]
-    # train_dataset.sentiment = train_dataset.sentiment.replace(4,1)
+    train_dataset.sentiment = train_dataset.sentiment.replace(4,1)
+    train_dataset.sentiment = train_dataset.sentiment.replace(0,-1)
 
     return train_dataset
 
