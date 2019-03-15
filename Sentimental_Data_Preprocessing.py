@@ -2,6 +2,7 @@ import pandas as pd
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import *
 
+
 def import_tweets(filename, header = None):
 
     train_dataset = pd.read_csv(filename, header = header, encoding='Latin-1', usecols=range(6), low_memory=False, index_col=False)
