@@ -119,5 +119,6 @@ def main(fileName):
     print("Sentimental Analysis Of Tweets Complete. Output File Generated %s" % outputFileName)
     return outputFileName
 
+
 if __name__ == '__main__':
     main('./Preprocessed_data/preprocessed_training_data.csv')

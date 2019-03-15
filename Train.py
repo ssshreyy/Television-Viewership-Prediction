@@ -37,7 +37,7 @@ def viewers_change(str_views):
 #     return str(int(float(str_views.strip().split('[')[0]) * 1000000))
 
 
-def main(fileName):
+def main(prediction_file,simpsons_file):
 
     viewer_data = pd.read_csv(simpsons_file, index_col=False, usecols=range(13))
     tweet_data = pd.read_csv(prediction_file, index_col=False, usecols=range(15), low_memory = False)
@@ -116,4 +116,4 @@ def main(fileName):
 
 
 if __name__ == "__main__":
-    main(prediction_file,simpsons_file)
+    main('./Prediction_data/tweet_2009_predict.csv', './Prediction_data/simpsons_episodes.csv')
