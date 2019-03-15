@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import sys, getopt, codecs
+import sys
+import getopt
+import codecs
 import Tweet_Preprocessing
 
 if sys.version_info[0] < 3:

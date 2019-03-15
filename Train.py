@@ -1,7 +1,7 @@
 import pandas as pd
 import bisect, datetime
-from sklearn import linear_model
 from sklearn import neighbors
+from sklearn import linear_model
 
 
 def compute(tweet_data, start, end):
@@ -39,8 +39,8 @@ def viewers_change(str_views):
 
 def main(prediction_file,simpsons_file):
 
-    viewer_data = pd.read_csv(simpsons_file, index_col=False, usecols=range(13))
-    tweet_data = pd.read_csv(prediction_file, index_col=False, usecols=range(15), low_memory = False)
+    viewer_data = pd.read_csv(simpsons_file, usecols=range(13), index_col=False)
+    tweet_data = pd.read_csv(prediction_file, usecols=range(15), index_col=False, low_memory = False)
 
     viewer_data['Air_Date'] = list(map(date_change, viewer_data['Air_Date']))
     viewer_data['US_Viewers_In_Millions'] = list(map(viewers_change, viewer_data['US_Viewers_In_Millions']))

@@ -1,9 +1,10 @@
 import warnings
-import pandas as pd
-from nltk.stem import WordNetLemmatizer
-from nltk.stem.porter import *
 import ML_Sentiment
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+import pandas as pd
+from nltk.stem.porter import *
+from nltk.stem import WordNetLemmatizer
+
+warnings.filterwarnings("ignore", category = DeprecationWarning)
 
 
 def remove_http(txt):
@@ -24,7 +25,7 @@ def main(fileName):
 
     print("Tweet Preprocessing Started")
 
-    train = pd.read_csv(fileName, encoding='utf-8', index_col=False, low_memory=False, usecols=range(12))
+    train = pd.read_csv(fileName, usecols = range(12), encoding = 'utf-8', index_col = False, low_memory = False)
     print("File Read Successful")
 
     train['Tidy_Tweet'] = [remove_pattern(x,'@') for x in train['Text']]

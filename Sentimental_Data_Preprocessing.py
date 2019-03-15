@@ -1,11 +1,11 @@
 import pandas as pd
-from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import *
+from nltk.stem import WordNetLemmatizer
 
 
 def import_tweets(filename, header = None):
 
-    train_dataset = pd.read_csv(filename, header = header, encoding='Latin-1', usecols=range(6), low_memory=False, index_col=False)
+    train_dataset = pd.read_csv(filename, usecols = range(6), encoding = 'Latin-1', index_col = False, low_memory = False, header = header)
     train_dataset.columns = ['Sentiment', 'Id', 'Date', 'Flag', 'User', 'Text']
 
     # for i in ['Flag','Id','User','Date']:

@@ -1,16 +1,16 @@
+import pickle
 import numpy as np
 import pandas as pd
-import pickle
+from sklearn.svm import SVC
+from scipy.sparse import hstack
+from nltk.sentiment import vader
+from sklearn.metrics import roc_auc_score
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.svm import SVC
-from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
-from scipy.sparse import hstack
-from nltk.sentiment import vader
 
 
 def train_classifier(features_train, features_test, label_train, label_test, classifier):
@@ -63,13 +63,13 @@ def main(fileName):
     algorithm = 'Logistic_Regression'
     print('Sentiment Analysis Model Training Started')
 
-    train_dataset = pd.read_csv(fileName, encoding='Latin-1', index_col=False, usecols=range(7), low_memory=False)
+    train_dataset = pd.read_csv(fileName, usecols = range(7), encoding = 'Latin-1', index_col = False, low_memory = False)
     train_dataset.Tidy_Tweet = train_dataset.Tidy_Tweet.fillna(value="")
     print( "Preprocessed Sentiment Training File read" )
 
     x = np.array(train_dataset.Tidy_Tweet)
     y = np.array(train_dataset.sentiment)
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 42)
     data_train = x_train
     label_train = y_train
     data_test = x_test
@@ -99,8 +99,8 @@ def main(fileName):
     model = pickle.load(pickle_in)
     print("%s Model Loaded" % algorithm)
 
-    prediction_dataset = pd.read_csv(inputFileName , usecols = range( 13 ) , encoding = 'Latin-1' , index_col = False , low_memory = False )
-    prediction_dataset.Tidy_Tweet = prediction_dataset.Tidy_Tweet.fillna( value = "")
+    prediction_dataset = pd.read_csv(inputFileName, usecols = range(13), encoding = 'Latin-1', index_col = False, low_memory = False)
+    prediction_dataset.Tidy_Tweet = prediction_dataset.Tidy_Tweet.fillna(value = "")
     x_prediction = np.array( prediction_dataset.Tidy_Tweet)
     print("Input Tweet File Read")
 
@@ -115,7 +115,7 @@ def main(fileName):
     prediction_dataset['Vader_Score'] = prediction_dataset['Tidy_Tweet'].apply( calculate_vader )
     print("Sentimental Analysis Using Vader Completed")
 
-    prediction_dataset.to_csv( outputFileName , index = False )
+    prediction_dataset.to_csv(outputFileName, index = False)
     print("Sentimental Analysis Of Tweets Complete. Output File Generated %s" % outputFileName)
     return outputFileName
 
