@@ -39,24 +39,20 @@ def viewers_change(str_views):
 
 def main(fileName):
 
-    viewer_data = pd.read_csv('./Prediction_data/simpsons_episodes.csv', index_col=False, usecols=range(13))
-    tweet_data = pd.read_csv(fileName, index_col=False, usecols=range(15), low_memory = False)
-    print(tweet_data['Text'])
+    viewer_data = pd.read_csv(simpsons_file, index_col=False, usecols=range(13))
+    tweet_data = pd.read_csv(prediction_file, index_col=False, usecols=range(15), low_memory = False)
 
-    print('1')
     viewer_data['Air_Date'] = list(map(date_change, viewer_data['Air_Date']))
     viewer_data['US_Viewers_In_Millions'] = list(map(viewers_change, viewer_data['US_Viewers_In_Millions']))
 
-    print('2')
     tweet_data['Date'] = list(map(date_change, tweet_data['Date']))
 
     first_date = bisect.bisect_left(viewer_data['Air_Date'], '2010-01-01')
-    last_date = bisect.bisect_left(viewer_data['Air_Date'], '2011-01-01')
+    last_date = bisect.bisect_left(viewer_data['Air_Date'], '2016-01-01')
 
     y = list(map(int,viewer_data['US_Viewers_In_Millions'][first_date+1:last_date]))
 
     final_score = list()
-    print('3')
     count = 1
     for i in range(first_date, last_date - 1):
         temp1 = str(viewer_data['Air_Date'][i])
@@ -120,4 +116,4 @@ def main(fileName):
 
 
 if __name__ == "__main__":
-    main('./Prediction_data/tweet_2009_predict.csv')
+    main(prediction_file,simpsons_file)
