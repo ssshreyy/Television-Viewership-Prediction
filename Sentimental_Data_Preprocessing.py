@@ -9,7 +9,8 @@ def import_tweets(filename, header = None):
 
     # for i in ['Flag','Id','User','Date']:
     #     del train_dataset[i]
-    # train_dataset.sentiment = train_dataset.sentiment.replace(4,1)
+    train_dataset.sentiment = train_dataset.sentiment.replace(4,1)
+    train_dataset.sentiment = train_dataset.sentiment.replace(0,-1)
 
     return train_dataset
 
@@ -19,7 +20,7 @@ def preprocess_tweet(tweet):
     if type(float) == type(tweet):
         return '-'
     tweet.lower()
-    tweet = re.sub('@[^\s]+','AT_USER', tweet)
+    tweet = re.sub('@[^\s]+',' ', tweet)
 
     tweet = re.sub('((www\.[^\s]+)|(https?://[^\s]+))',' ',tweet)
 

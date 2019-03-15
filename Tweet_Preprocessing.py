@@ -3,7 +3,6 @@ import pandas as pd
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import *
 import ML_Sentiment
-
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 

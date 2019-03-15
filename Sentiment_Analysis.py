@@ -31,7 +31,7 @@ def train_classifier(features_train, features_test, label_train, label_test, cla
         model = MultinomialNB()
     elif classifier == "SVM":
         model = SVC()
-    elif classifier == "Random_Forest":
+    elif classifier == "Random Forest":
         model = RandomForestClassifier(n_estimators=400, random_state=11)
     else:
         print("Incorrect selection of classifier")
@@ -51,10 +51,10 @@ def train_classifier(features_train, features_test, label_train, label_test, cla
     probability_to_be_positive = model.predict_proba(features_test)[:,1]
 
     # Check AUC(Area Under the Roc Curve) to see how well the score discriminates between negative and positive
-    print ("auc (train data):" , roc_auc_score(label_test, probability_to_be_positive))
+    print ("AUC (Train Data):" , roc_auc_score(label_test, probability_to_be_positive))
 
     # Print top 10 scores as a sanity check
-    print ("top 10 scores: ", probability_to_be_positive[:10])
+    print ("Top 10 Scores: ", probability_to_be_positive[:10])
 
     return model
 
@@ -90,7 +90,6 @@ def main(fileName):
     tfv = TfidfVectorizer( sublinear_tf = True , stop_words = "english" )
     Tfidf_features_train = tfv.fit_transform( data_train )
     Tfidf_features_test = tfv.transform( data_test )
-
     print( "TF-IDF Features Extracted" )
 
     bow_vectorizer = CountVectorizer( max_df = 0.90 , min_df = 2 , max_features = 1000 , stop_words = 'english' )
