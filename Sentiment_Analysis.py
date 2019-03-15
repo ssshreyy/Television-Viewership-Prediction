@@ -13,28 +13,17 @@ from scipy.sparse import hstack
 from nltk.sentiment import vader
 
 
-def feature_extraction(data, method = "tfidf"):
-    if method == "tfidf":
-        tfv=TfidfVectorizer(sublinear_tf=True, stop_words = "english")
-        features=tfv.fit_transform(data)
-    elif method == "doc2vec":
-        None
-    else:
-        return "Incorrect inputs"
-    return features
-
-
 def train_classifier(features_train, features_test, label_train, label_test, classifier):
-    if classifier == "Logistic Regression":
+    if classifier == "Logistic_Regression":
         model = LogisticRegression(C=1.)
-    elif classifier == "Naive Bayes":
+    elif classifier == "Naive_Bayes":
         model = MultinomialNB()
     elif classifier == "SVM":
         model = SVC()
-    elif classifier == "Random Forest":
+    elif classifier == "Random_Forest":
         model = RandomForestClassifier(n_estimators=400, random_state=11)
     else:
-        print("Incorrect selection of classifier")
+        print("Incorrect Selection Of Classifier")
 
     model.fit(features_train, label_train)
     print("Model Fitting Done")
@@ -69,9 +58,9 @@ def calculate_vader(tweet):
 
 def main(fileName):
 
-    inputFileName = './Preprocessed_data/tweet_2009_preprocessed.csv'
-    outputFileName = './Prediction_data/tweet_2009_predict.csv'
-    algorithm = 'Naive Bayes'
+    inputFileName = './Preprocessed_data/tweet_2015_preprocessed.csv'
+    outputFileName = './Prediction_data/tweet_2015_predict.csv'
+    algorithm = 'Logistic_Regression'
     print('Sentiment Analysis Model Training Started')
 
     train_dataset = pd.read_csv(fileName, encoding='Latin-1', index_col=False, usecols=range(7), low_memory=False)
@@ -87,10 +76,10 @@ def main(fileName):
     label_test = y_test
     print('Data Sliced In Training And Testing Sets')
 
-    tfv = TfidfVectorizer( sublinear_tf = True , stop_words = "english" )
+    tfv = TfidfVectorizer( sublinear_tf = True , stop_words = "english")
     Tfidf_features_train = tfv.fit_transform( data_train )
     Tfidf_features_test = tfv.transform( data_test )
-    print( "TF-IDF Features Extracted" )
+    print( "TF-IDF Features Extracted")
 
     bow_vectorizer = CountVectorizer( max_df = 0.90 , min_df = 2 , max_features = 1000 , stop_words = 'english' )
     bow_features_train = bow_vectorizer.fit_transform( data_train )
@@ -101,15 +90,17 @@ def main(fileName):
     features_final_test = hstack( (Tfidf_features_test , bow_features_test) )
     print("Training And Testing Sparse Matrix Created")
 
-    print( "Model Training Started" )
-    model = train_classifier( features_final_train , features_final_test , label_train , label_test , algorithm)
-    print( "Model Training Complete" )
+    # print( "Model Training Started")
+    # model = train_classifier( features_final_train , features_final_test , label_train , label_test , algorithm)
+    # print( "Model Training Complete")
 
-    # pickle_in = open('logistic.pickle', 'rb')
-    # model = pickle.load(pickle_in)
+    fileName = './Sentiment_models/' + algorithm + '.pickle'
+    pickle_in = open( fileName, 'rb' )
+    model = pickle.load(pickle_in)
+    print("%s Model Loaded" % algorithm)
 
     prediction_dataset = pd.read_csv(inputFileName , usecols = range( 13 ) , encoding = 'Latin-1' , index_col = False , low_memory = False )
-    prediction_dataset.Tidy_Tweet = prediction_dataset.Tidy_Tweet.fillna( value = "" )
+    prediction_dataset.Tidy_Tweet = prediction_dataset.Tidy_Tweet.fillna( value = "")
     x_prediction = np.array( prediction_dataset.Tidy_Tweet)
     print("Input Tweet File Read")
 
