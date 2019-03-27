@@ -48,22 +48,15 @@ def train_classifier(features_train, features_test, label_train, label_test, cla
 def computeAverage(tweet_data, start, end):
     if start == end:
         return 0
-
-    # temp1 = 0
-    # temp2 = 0
-    # count = 1
-    # for i in range(start, end+1):
-    #     temp2 = float(tweet_data['Sentiment_Score'][i])
-    #     if temp2 != 0:
-    #         count += 1
-    #         temp1 += temp2
-    # return float(temp1)
+    total = end-start+1
     score = 0
-
+    count = 1
     for i in range(start, end+1):
-        score += (float(tweet_data['Retweets'][i]) + 1) * float(tweet_data['Vader_Score'][i])
+        score += count * float(tweet_data['Vader_Score'][i])
+        count += 1
 
-    return score
+    return score/total
+
 
 def date_change(str_date):
     if str_date:
@@ -86,6 +79,7 @@ def viewers_change(str_views):
 
 def main(prediction_file, simpsons_file):
 
+    algorithm = "Logistic_Regression"
     print('Viewership Prediction Started')
     viewer_data = pd.read_csv(simpsons_file, usecols=range(13), index_col=False, low_memory = False)
     print('Episode Data File Read Successful')
@@ -115,21 +109,12 @@ def main(prediction_file, simpsons_file):
         end = bisect.bisect_left(tweet_data['Date'], temp2)
         temp3.append(computeAverage(tweet_data, start, end))
 
-        # print(count, temp2, viewer_data['Title'][i + 1], temp3)
+        print(count, temp2, viewer_data['Title'][i + 1], temp3)
 
         count += 1
         x_train.append(temp3)
 
     print('4')
-    print(x_train)
-    print(y_train)
-    clf = neighbors.KNeighborsClassifier(8)
-    clf.fit(x_train, y_train)
-
-    regression = linear_model.LinearRegression()
-    regression.fit(x_train, y_train)
-
-    print('5')
 
     first_date = bisect.bisect_left(viewer_data['Air_Date'], '2015-01-01')
     last_date = bisect.bisect_left(viewer_data['Air_Date'], '2016-01-01')
@@ -153,20 +138,18 @@ def main(prediction_file, simpsons_file):
         x_test.append(temp3)
 
     print('7')
-    print(x_test)
-    print(y_test)
-    print(regression.predict(x_test))
-    print(clf.predict(x_test))
 
-    acc = clf.score(x_test,y_test)
+    # model = train_classifier(x_train, y_train, x_test, y_test, algorithm)
 
-    print(acc)
+    lin = linear_model.LinearRegression()
+    lin.fit(x_train,x_test)
+    acc = lin.score(x_train,x_test)
+    print("Linear ",acc)
 
-    accuracy = regression.score(x_test, y_test)
-
-    print(accuracy)
-    print(y_test)
-
+    lin = linear_model.LogisticRegression()
+    lin.fit( x_train , x_test )
+    acc = lin.score( x_train , x_test )
+    print("Logistic ",acc)
 
 if __name__ == "__main__":
     main('./Prediction_data/tweet_predict.csv', './Prediction_data/simpsons_episodes.csv')
