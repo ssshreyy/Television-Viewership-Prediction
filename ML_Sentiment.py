@@ -1,4 +1,4 @@
-import Train
+import Feature_Extraction
 import Sentiment_Analysis
 import Sentimental_Data_Preprocessing
 
@@ -11,7 +11,7 @@ def main(fileName):
     outputFileName = Sentiment_Analysis.main(preprocessedTrainFileName)
     episodeFileName = './Prediction_data/simpsons_episodes.csv'
 
-    Train.main(outputFileName, episodeFileName)
+    Feature_Extraction.main( outputFileName , episodeFileName )
 
 
 if __name__ == "__main__":
