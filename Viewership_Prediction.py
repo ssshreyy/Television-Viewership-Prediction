@@ -54,27 +54,27 @@ def train_classifier(features_train, features_test, label_train, label_test, cla
 def main(simpsons_file):
 
     print('Viewership Prediction Started')
-    viewer_data = pd.read_csv(simpsons_file, dtype={'Unique_Users': float, 'US_Viewers_In_Millions': float}, usecols = range(7, 19), index_col = False, low_memory = False)
+    viewer_data = pd.read_csv(simpsons_file, dtype={'Unique_Users': float, 'US_Viewers_In_Millions': float}, usecols = range(19), index_col = False, low_memory = False)
     viewer_data.dropna( inplace = True )
     print('Episode Data File Read Successful')
 
     x = viewer_data.loc[:, ['Views', 'IMDB_Rating', 'IMDB_Votes', 'Retweets', 'Favorites', 'Vader_Score', 'Sentiment_Score', 'Tweets_Per_Day', 'Unique_Users']]
     y = viewer_data.loc[:, ['US_Viewers_In_Millions']]
-
+    # print(y)
     scaler = MinMaxScaler( feature_range = (0, 1))
     x = scaler.fit_transform(x)
-    y = scaler.fit_transform(y)
+    # y = scaler.fit_transform(y)
     print('Data Rescaling Complete')
 
     x = preprocessing.scale(x)
-    y = preprocessing.scale(y)
+    # y = preprocessing.scale(y)
     print('Data Standardization Complete')
 
     x = preprocessing.normalize(x)
-    y = preprocessing.normalize(y)
+    # y = preprocessing.normalize(y)
     print('Data Normalization Complete')
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.1, random_state = 0)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 0)
     print("Shape of x_train: ", x_train.shape)
     print("Shape of y_train: ", y_train.shape)
     print("Shape of x_test: ", x_test.shape)
@@ -82,9 +82,12 @@ def main(simpsons_file):
     print('Data Sliced In Training And Testing Sets')
 
     print("Model Training Started")
-    algorithm = "Polynomial"
+    algorithm = "Linear"
     model = train_classifier(x_train, x_test, y_train, y_test, algorithm)
     print("Model Training Complete")
+
+    viewer_data['Predicted_Viewership'] = model.predict(x)
+    viewer_data.to_csv('./Prediction_data/predicted_file.csv')
 
 
 if __name__ == '__main__':
