@@ -2,6 +2,7 @@ import pandas as pd
 import bisect, datetime
 import Viewership_Prediction
 
+
 def date_change(str_date):
     if str_date:
         return datetime.datetime.strptime(str_date, '%d-%m-%Y').strftime('%Y-%m-%d')
@@ -80,7 +81,7 @@ def main(prediction_file, simpsons_file):
     viewer_data['Unique_Users'] = uniqueUsers
     viewer_data.to_csv(simpsons_file, index = False)
 
-    Viewership_Prediction.main()
+    Viewership_Prediction.main(simpsons_file)
 
 
 if __name__ == "__main__":
