@@ -11,6 +11,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import mean_squared_error, r2_score
+# from __future__ import absolute_import
+# from __future__ import division
+# from __future__ import print_function
+
+import itertools
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pylab import rcParams
+import matplotlib
+
 
 
 def train_classifier(features_train, features_test, label_train, label_test, classifier):
@@ -23,10 +35,35 @@ def train_classifier(features_train, features_test, label_train, label_test, cla
     elif classifier == "Linear":
         model = LinearRegression()
     elif classifier == "Polynomial":
-        poly = PolynomialFeatures(degree = 1)
-        features_train = poly.fit_transform(features_train)
-        features_test = poly.fit_transform(features_test)
+        poly_features = PolynomialFeatures(degree=1)
+        features_train_poly = poly_features.fit_transform(features_train)
         model = LinearRegression()
+        model.fit(features_train_poly, label_train)
+        # predicting on training data-set
+        y_train_predicted = model.predict(features_train_poly)
+
+        # predicting on test data-set
+        y_test_predict = model.predict(poly_features.fit_transform(features_test))
+
+        # evaluating the model on training dataset
+        rmse_train = np.sqrt(mean_squared_error(label_train, y_train_predicted))
+        r2_train = r2_score(label_train, y_train_predicted)
+
+        # evaluating the model on test dataset
+        rmse_test = np.sqrt(mean_squared_error(label_test, y_test_predict))
+        r2_test = r2_score(label_test, y_test_predict)
+
+        # print("The model performance for the training set")
+        # print("-------------------------------------------")
+        # print("RMSE of training set is {}".format(rmse_train))
+        # print("R2 score of training set is {}".format(r2_train))
+        #
+        # print("\n")
+        #
+        # print("The model performance for the test set")
+        # print("-------------------------------------------")
+        # print("RMSE of test set is {}".format(rmse_test))
+        # print("R2 score of test set is {}".format(r2_test))
     elif classifier == "Random_Forest":
         model = RandomForestClassifier(n_estimators=400, random_state=11)
     elif classifier == "Kmeans":
@@ -36,17 +73,15 @@ def train_classifier(features_train, features_test, label_train, label_test, cla
     else:
         print("Incorrect Selection Of Classifier")
 
-    print("Model Selection Complete")
     model.fit(features_train, label_train)
-    print("Model Fitting Done")
 
-    fileName = './Prediction_models/' + classifier + '.pickle'
-    with open(fileName, 'wb') as file:
-        pickle.dump(model, file)
-    print("Pickle File Created %s" % fileName)
+    # fileName = './Prediction_models/' + classifier + '.pickle'
+    # with open(fileName, 'wb') as file:
+    #     pickle.dump(model, file)
+    # print("Pickle File Created %s" % fileName)
 
     accuracy = model.score(features_test, label_test)
-    print("Accuracy Is:", accuracy)
+    # print("Accuracy Is:", accuracy)
 
     return model
 
@@ -61,18 +96,20 @@ def main(simpsons_file):
     x = viewer_data.loc[:, ['Views', 'IMDB_Rating', 'IMDB_Votes', 'Retweets', 'Favorites', 'Vader_Score', 'Sentiment_Score', 'Tweets_Per_Day', 'Unique_Users']]
     y = viewer_data.loc[:, ['US_Viewers_In_Millions']]
     # print(y)
+    x_temp =x
+    y_temp =y
     scaler = MinMaxScaler( feature_range = (0, 1))
     x = scaler.fit_transform(x)
-    # y = scaler.fit_transform(y)
+    y = scaler.fit_transform(y)
     print('Data Rescaling Complete')
 
     x = preprocessing.scale(x)
-    # y = preprocessing.scale(y)
+    y = preprocessing.scale(y)
     print('Data Standardization Complete')
 
     x = preprocessing.normalize(x)
     # y = preprocessing.normalize(y)
-    print('Data Normalization Complete')
+    # print('Data Normalization Complete')
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 0)
     print("Shape of x_train: ", x_train.shape)
@@ -82,10 +119,39 @@ def main(simpsons_file):
     print('Data Sliced In Training And Testing Sets')
 
     print("Model Training Started")
-    algorithm = "Linear"
+    algorithm = "Polynomial"
     model = train_classifier(x_train, x_test, y_train, y_test, algorithm)
     print("Model Training Complete")
 
+    # viewer_data['Predicted_Viewership'] = model.predict(x)
+    # viewer_data.to_csv('./Prediction_data/predicted_file.csv')
+
+    # print(model.predict(x_test))
+    # print(y_test)
+
+    flat_list = []
+    for sublist in y:
+        for item in sublist:
+            flat_list.append(item)
+
+    # print(flat_list)
+
+    plt.scatter(model.predict(x), flat_list, label='skitscat', color='k', s=25, marker="o")
+    plt.xlabel('Prediction')
+    plt.ylabel('Reality')
+    plt.title('Prediction vs Reality')
+    plt.legend()
+    plt.show()
+    print("Done")
+
+    scaler = MinMaxScaler( feature_range = (0, 1))
+    x = scaler.fit_transform(x_temp)
+    x = preprocessing.scale(x)
+    x = preprocessing.normalize(x)
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y_temp, test_size = 0.2, random_state = 0)
+    algorithm = "Polynomial"
+    model = train_classifier(x_train, x_test, y_train, y_test, algorithm)
     viewer_data['Predicted_Viewership'] = model.predict(x)
     viewer_data.to_csv('./Prediction_data/predicted_file.csv')
 
