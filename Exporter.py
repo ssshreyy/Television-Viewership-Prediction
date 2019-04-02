@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 import getopt
 import codecs
@@ -9,14 +8,14 @@ if sys.version_info[0] < 3:
 else:
     import got3 as got
 
+
 def main(argv):
     if len(argv) == 0:
         print('You must pass some parameters.')
         return
 
     try:
-        opts, _ = getopt.getopt(argv, "", (
-        "username=", "near=", "within=", "since=", "until=", "querysearch=", "toptweets", "maxtweets=", "output="))
+        opts, _ = getopt.getopt(argv, "", ("username=", "near=", "within=", "since=", "until=", "querysearch=", "toptweets", "maxtweets=", "output="))
 
         tweetCriteria = got.manager.TweetCriteria()
         outputFileName = "./Tweet_data/tweet_data.csv"

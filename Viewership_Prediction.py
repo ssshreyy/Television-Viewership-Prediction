@@ -1,7 +1,8 @@
-import pickle
+import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn import neighbors
+import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.preprocessing import MinMaxScaler
@@ -12,17 +13,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error, r2_score
-# from __future__ import absolute_import
-# from __future__ import division
-# from __future__ import print_function
-
-import itertools
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from pylab import rcParams
-import matplotlib
-
 
 
 def train_classifier(features_train, features_test, label_train, label_test, classifier):

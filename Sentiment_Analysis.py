@@ -59,8 +59,8 @@ def calculate_vader(tweet):
 def main(fileName):
 
     print('Sentiment Analysis Model Training Started')
-    inputFileName = './Preprocessed_data/tweet_2017_preprocessed.csv'
-    outputFileName = './Prediction_data/tweet_2017_predict.csv'
+    inputFileName = './Preprocessed_data/tweet_data_preprocessed.csv'
+    outputFileName = './Prediction_data/tweet_data_predict.csv'
     algorithm = 'Logistic_Regression'
 
     train_dataset = pd.read_csv(fileName, usecols = range(7), encoding = 'Latin-1', index_col = False, low_memory = False)
